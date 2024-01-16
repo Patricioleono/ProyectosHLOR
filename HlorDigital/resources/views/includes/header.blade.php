@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg bg-danger">
     <div class="container-fluid">
         <a class="navbar-brand text-secondary" href="#">
-            <i class="fa-solid fa-user-doctor"></i>
+            <i class="fa-solid fa-user-doctor me-1"></i>
             FICHAS GINECOLOGICAS</a>
         <div class="dropdown p-1">
             <button class="btn btn-secondary me-1" type="button">
