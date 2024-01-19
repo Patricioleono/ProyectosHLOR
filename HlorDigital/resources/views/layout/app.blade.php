@@ -21,6 +21,44 @@
     <!-- JAVASCRIPT SCRIPT -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        var hlorBase = "{{ url('/') }}";
+
+
+        function hlorAlert(status){
+            let message = '';
+            let title = '';
+            let type = 0;
+
+            switch(status.status){
+                case 400:
+                    type = 'error'
+                    title = 'Error de usuario'
+                    message = 'Por Favor Verifique los campos llenados'
+                    break
+                default:
+                    //cae aqui si es correcto(200)
+                    type = 'success'
+                    title = 'comunicado exitoso'
+                    text = 'comunicado exitoso'
+                    break
+            }
+
+            Swal.fire({
+                title: `${title}`,
+                text: `${message}`,
+                icon: `${type}`
+            });
+        }
+
+        function formValidation(name, lastName, surName, statePap, rutSinDv, rutDv, edad, direccion, fechaPap){
+            if(name.length < 3 || lastName.length < 3 || surName.length < 3 || statePap == 'Seleccione Aqui' || rutSinDv == 0 || edad < 10 || edad > 90 || direccion.length < 3){
+                return {'status': 400}
+            }else{
+                return {'status': 200}
+            }
+        }
+    </script>
     @yield('scriptMatronas')
  </body>
 
