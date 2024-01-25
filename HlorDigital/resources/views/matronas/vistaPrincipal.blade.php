@@ -211,10 +211,30 @@
             let fechaPap = $('#inputFechaPap').val().split('-').reverse().join('-');
 
             let resultValidation = formValidation(name, lastName, surName, statePap, rutSinDv, rutDv, edad, direccion, fechaPap);
-            //hlorAlert(resultValidation)
 
             if(resultValidation.status != 200){
                 hlorAlert(resultValidation)
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: hlorBase + '/newPacient',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        name: name,
+                        lastName: lastName,
+                        surName: surName,
+                        statePap: statePap,
+                        rutDv: rutDv,
+                        rutSinDv: rutSinDv,
+                        edad: edad,
+                        direccion: direccion,
+                        fechaPap: fechaPap
+                    },
+                    dataType: 'JSON',
+                    success: function(result){
+                        console.log(result)
+                    }
+                });
             }
 
 
