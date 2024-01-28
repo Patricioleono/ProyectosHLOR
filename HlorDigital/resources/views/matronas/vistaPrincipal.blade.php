@@ -133,7 +133,7 @@
                     </div>
                     <hr />
                     <div class="col-12 justify-content-end text-end">
-                        <button type="button" class="btn btn-primary text-white" data-bs-dismiss="modal"><i class="fa-solid fa-right-left"></i> Volver</button>
+                        <button type="button" class="btn btn-primary text-white" id="closeModal" data-bs-dismiss="modal"><i class="fa-solid fa-right-left"></i> Volver</button>
                         <button type="submit" class="btn btn-success text-white" id="saveNewPacient"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                     </div>
                 </form>
@@ -195,7 +195,20 @@
             } else {
                 $('#fechaPap').fadeOut();
                 $('#fechaPap').addClass('d-none');
+                $('#inputFechaPap').val('');
             }
+        });
+        $('#closeModal').on('click', function() {
+            $('#inputName').val('');
+            $('#inputLastName').val('');
+            $('#inputSurName').val('');
+            $('#inputSelectPap').val('Seleccione Aqui');
+            $('#inputRut').val('');
+            $('#inputEdad').val('');
+            $('#inputDireccion').val('');
+            $('#inputFechaPap').val('');
+            $('#fechaPap').fadeOut();
+            $('#fechaPap').addClass('d-none');
         });
 
         $('#saveNewPacient').on('click', function(event) {
@@ -233,12 +246,14 @@
                     dataType: 'JSON',
                     success: function(result){
                         console.log(result)
+                        hlorAlert(result);
                     }
                 });
             }
 
 
         });
+        
     })
 </script>
 @endsection

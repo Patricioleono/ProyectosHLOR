@@ -10,7 +10,7 @@ class MatronasPacientes extends Model
     use HasFactory;
 
     protected $table = 'mat_pacientes';
-    protected $primaryKey = 'paciente-id';
+    protected $primaryKey = 'paciente_id';
 
     protected $fillable = [
         'paciente_nombre',

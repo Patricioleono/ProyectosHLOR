@@ -32,12 +32,22 @@
 
             switch(status.status){
                 case 400:
+                    if(status.message){
+                        type = 'error'
+                        title = 'Error de usuario'
+                        message = 'Error de Tipo: '+status.message+' Error N°: '+status.status;
+                    }
                     type = 'error'
                     title = 'Error de usuario'
                     message = 'Por Favor Verifique los campos llenados'
                     break
                 default:
                     //cae aqui si es correcto(200)
+                    if(status.message){
+                        type = 'error'
+                        title = 'Error de usuario'
+                        message = status.message
+                    }
                     type = 'success'
                     title = 'comunicado exitoso'
                     text = 'comunicado exitoso'
@@ -52,8 +62,9 @@
         }
 
         function formValidation(name, lastName, surName, statePap, rutSinDv, rutDv, edad, direccion, fechaPap){
-            if(name.length < 3 || lastName.length < 3 || surName.length < 3 || statePap == 'Seleccione Aqui' || rutSinDv == 0 || edad < 10 || edad > 90 || direccion.length < 3){
-                return {'status': 400}
+            //|| lastName.length < 3 || surName.length < 3 || statePap == 'Seleccione Aqui' || rutSinDv == 0 || edad < 10 || edad > 90 || direccion.length < 3
+            if(name.length < 3){
+                return {'status': 400, 'input': 'name'}
             }else{
                 return {'status': 200}
             }
