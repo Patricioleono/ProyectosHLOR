@@ -5,14 +5,14 @@
 @endsection
 
 @section('content')
-<div class="row m-3">
+<div class="row m-1">
     <div class="col-12">
         <button class="btn btn-success text-white" data-bs-toggle="modal" data-bs-target="#modalNuevoPaciente">
             <i class="text-white fa-solid fa-square-plus me-1"></i>
             Nuevo Paciente</button>
     </div>
     <div class="col-12 mt-3">
-        <table class="table table-hover">
+        <table class="table table-hover" id="tableListPacients">
             <thead>
                 <tr>
                     <th scope="col">Nombre</th>
@@ -23,55 +23,7 @@
                     <th scope="col">Acciones</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>Patricio</td>
-                    <td>Leon Ormazabal</td>
-                    <td>18.028.144-4</td>
-                    <td>15-01-2024</td>
-                    <td>No</td>
-                    <td>
-                        <button class="btn btn-primary"><i class="text-white fa-solid fa-eye"></i></button>
-                        <button class="btn btn-info"><i class="text-white fa-solid fa-file-pen"></i></button>
-                        <button class="btn btn-danger"><i class="text-white fa-solid fa-hand-holding-heart"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Patricio</td>
-                    <td>Leon Ormazabal</td>
-                    <td>18.028.144-4</td>
-                    <td>15-01-2024</td>
-                    <td>No</td>
-                    <td>
-                        <button class="btn btn-primary"><i class="text-white fa-solid fa-eye"></i></button>
-                        <button class="btn btn-info"><i class="text-white fa-solid fa-file-pen"></i></button>
-                        <button class="btn btn-danger"><i class="text-white fa-solid fa-hand-holding-heart"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Patricio</td>
-                    <td>Leon Ormazabal</td>
-                    <td>18.028.144-4</td>
-                    <td>15-01-2024</td>
-                    <td>No</td>
-                    <td>
-                        <button class="btn btn-primary"><i class="text-white fa-solid fa-eye"></i></button>
-                        <button class="btn btn-info"><i class="text-white fa-solid fa-file-pen"></i></button>
-                        <button class="btn btn-danger"><i class="text-white fa-solid fa-hand-holding-heart"></i></button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>Patricio</td>
-                    <td>Leon Ormazabal</td>
-                    <td>18.028.144-4</td>
-                    <td>15-01-2024</td>
-                    <td>No</td>
-                    <td>
-                        <button class="btn btn-primary"><i class="text-white fa-solid fa-eye"></i></button>
-                        <button class="btn btn-info"><i class="text-white fa-solid fa-file-pen"></i></button>
-                        <button class="btn btn-danger"><i class="text-white fa-solid fa-hand-holding-heart"></i></button>
-                    </td>
-                </tr>
+            <tbody>            
             </tbody>
         </table>
     </div>
@@ -133,7 +85,7 @@
                     </div>
                     <hr />
                     <div class="col-12 justify-content-end text-end">
-                        <button type="button" class="btn btn-primary text-white" data-bs-dismiss="modal"><i class="fa-solid fa-right-left"></i> Volver</button>
+                        <button type="button" class="btn btn-primary text-white" id="closeModal" data-bs-dismiss="modal"><i class="fa-solid fa-right-left"></i> Volver</button>
                         <button type="submit" class="btn btn-success text-white" id="saveNewPacient"><i class="fa-solid fa-floppy-disk"></i> Guardar</button>
                     </div>
                 </form>
@@ -147,6 +99,55 @@
 
 @section('scriptMatronas')
 <script>
+    //carga Principal Listado Pacientes table
+    $.ajaxSetup({headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}"  }});
+
+    $('#tableListPacients').DataTable({
+        "processing": false,
+        "serverSide": true,
+        "lengthChange": false,
+        "paging": false,
+        "scrollCollapse": true,
+        "scrollY": '50vh',
+        "ajax": {
+            url: hlorBase + "/listPacients",
+            type: "POST"
+        },
+        "columns": [
+            { "data": "paciente_nombre", "name":"paciente_nombre"},
+            { "data": "paciente_apellido_paterno", "name":"paciente_apellido_paterno" },
+            { "data": "paciente_rut_sin_dv", "name":"paciente_rut_sin_dv" },
+            { "data": "paciente_fecha", "name":"paciente_fecha" },
+            { "data": "paciente_estado_pap", "name":"paciente_estado_pap" },
+            { "data": "action" }
+        ],
+        "order": [[ 0, "desc" ]],
+        language: {
+            "decimal":        "",
+            "emptyTable":     "No hay datos",
+            "info":           "Mostrando _START_ a _END_ de _TOTAL_ registros",
+            "infoEmpty":      "Mostrando 0 a 0 de 0 registros",
+            "infoFiltered":   "(Filtro de _MAX_ total registros)",
+            "infoPostFix":    "",
+            "thousands":      ",",
+            "lengthMenu":     "Mostrar _MENU_ registros",
+            "loadingRecords": "Cargando...",
+            "processing":     "Procesando...",
+            "search":         "Buscar:",
+            "zeroRecords":    "No se encontraron Registros",
+            "paginate": {
+                "first":      "Primero",
+                "last":       "Ultimo",
+                "next":       "Próximo",
+                "previous":   "Anterior"
+            },
+            "aria": {
+                "sortAscending":  ": Activar orden de columna ascendente",
+                "sortDescending": ": Activar orden de columna desendente"
+            }
+        }
+    });
+
     $(document).ready(function() {
         //escuchar cambios en el input
         document.addEventListener('input', (e) => {
@@ -195,7 +196,32 @@
             } else {
                 $('#fechaPap').fadeOut();
                 $('#fechaPap').addClass('d-none');
+                $('#inputFechaPap').val('');
             }
+        });
+        $('#closeModal').on('click', function() {
+            $('#inputName').val('');
+            $('#inputLastName').val('');
+            $('#inputSurName').val('');
+            $('#inputSelectPap').val('Seleccione Aqui');
+            $('#inputRut').val('');
+            $('#inputEdad').val('');
+            $('#inputDireccion').val('');
+            $('#inputFechaPap').val('');
+            $('#fechaPap').fadeOut();
+            $('#fechaPap').addClass('d-none');
+        });
+        $('.btn-close').on('click', function() {
+            $('#inputName').val('');
+            $('#inputLastName').val('');
+            $('#inputSurName').val('');
+            $('#inputSelectPap').val('Seleccione Aqui');
+            $('#inputRut').val('');
+            $('#inputEdad').val('');
+            $('#inputDireccion').val('');
+            $('#inputFechaPap').val('');
+            $('#fechaPap').fadeOut();
+            $('#fechaPap').addClass('d-none');
         });
 
         $('#saveNewPacient').on('click', function(event) {
@@ -210,15 +236,38 @@
             let direccion = $('#inputDireccion').val();
             let fechaPap = $('#inputFechaPap').val().split('-').reverse().join('-');
 
-            let resultValidation = formValidation(name, lastName, surName, statePap, rutSinDv, rutDv, edad, direccion, fechaPap);
-            //hlorAlert(resultValidation)
+            let resultValidation = formValidation(name, lastName, surName, statePap, rutSinDv, edad, direccion, fechaPap);
 
+            console.log(resultValidation);
             if(resultValidation.status != 200){
                 hlorAlert(resultValidation)
+            }else{
+                (statePap != 'no')? statePap = true : statePap = false;
+                $.ajax({
+                    type: 'POST',
+                    url: hlorBase + '/newPacient',
+                    data: {
+                        "_token": "{{ csrf_token() }}",
+                        name: name,
+                        lastName: lastName,
+                        surName: surName,
+                        statePap: statePap,
+                        rutDv: rutDv,
+                        rutSinDv: rutSinDv,
+                        edad: edad,
+                        direccion: direccion,
+                        fechaPap: fechaPap
+                    },
+                    dataType: 'JSON',
+                    success: function(result){
+                        hlorAlert(result);
+                    }
+                });
             }
 
 
         });
+        
     })
 </script>
 @endsection
