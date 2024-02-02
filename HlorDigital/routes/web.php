@@ -11,4 +11,5 @@ Route::get('/', function () {
 
 Route::controller(MatronasPacientes::class)->group( function() {
     Route::post('/newPacient', 'saveNewPacient');
+    Route::post('/listPacients', 'listPacients');
 });
