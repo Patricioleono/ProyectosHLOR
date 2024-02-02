@@ -223,11 +223,13 @@
             let direccion = $('#inputDireccion').val();
             let fechaPap = $('#inputFechaPap').val().split('-').reverse().join('-');
 
-            let resultValidation = formValidation(name, lastName, surName, statePap, rutSinDv, rutDv, edad, direccion, fechaPap);
+            let resultValidation = formValidation(name, lastName, surName, statePap, rutSinDv, edad, direccion, fechaPap);
 
+            console.log(resultValidation);
             if(resultValidation.status != 200){
                 hlorAlert(resultValidation)
             }else{
+                (statePap != 'no')? statePap = true : false;
                 $.ajax({
                     type: 'POST',
                     url: hlorBase + '/newPacient',

@@ -35,7 +35,7 @@
                     if(status.message){
                         type = 'error'
                         title = 'Error de usuario'
-                        message = 'Error de Tipo: '+status.message+' Error N°: '+status.status;
+                        message = 'Error: '+status.message+' Error N°: '+status.status;
                     }
                     type = 'error'
                     title = 'Error de usuario'
@@ -49,8 +49,7 @@
                         message = status.message
                     }
                     type = 'success'
-                    title = 'comunicado exitoso'
-                    text = 'comunicado exitoso'
+                    text = 'Proceso Realizado Exitosamente'
                     break
             }
 
@@ -61,14 +60,18 @@
             });
         }
 
-        function formValidation(name, lastName, surName, statePap, rutSinDv, rutDv, edad, direccion, fechaPap){
-            //|| lastName.length < 3 || surName.length < 3 || statePap == 'Seleccione Aqui' || rutSinDv == 0 || edad < 10 || edad > 90 || direccion.length < 3
-            if(name.length < 3){
-                return {'status': 400, 'input': 'name'}
-            }else{
-                return {'status': 200}
-            }
+        function formValidation(name, lastName, surName, statePap, rutSinDv, edad, direccion, fechaPap){
+            if(name.length < 3){    return {'status': 400,'message': 'Al Ingresar Nombre'}  }else{return {'status': 200}}
+            if(lastName.length < 3){    return {'status': 400,'message': 'Al Ingresar Apellido Paterno'}   }else{return {'status': 200}}
+            if(surName.length < 3){ return {'status': 400,'message':'Ingresar Apellido Materno'}    }else{return {'status': 200}}
+            if(statePap == 'Seleccione Aqui'){return resultStatePap}else{return {'status': 200}}
+            if(rutSinDv == 0  ){return {'status': 400,'message':'rut ingresado es incorrecto'}}else{return {'status': 200}}
+            if(edad < 10 || edad > 90 ){return {'status': 400,'message':'edad ingresada es Incorrecta'}}else{return {'status': 200}}
+            if(direccion.length < 3){return {'status': 400,'message':'Direccion no valida'}}else{return {'status': 200}}
+
         }
+
+
     </script>
     @yield('scriptMatronas')
  </body>
