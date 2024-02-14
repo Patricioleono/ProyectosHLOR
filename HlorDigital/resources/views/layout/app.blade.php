@@ -46,8 +46,7 @@
                 default:
                     //cae aqui si es correcto(200)
                     if(status.message){
-                        type = 'error'
-                        title = 'Error de usuario'
+                        type = 'success'
                         message = status.message
                     }
                     type = 'success'

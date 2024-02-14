@@ -114,12 +114,31 @@
             type: "POST"
         },
         "columns": [
-            { "data": "paciente_nombre", "name":"paciente_nombre"},
-            { "data": "paciente_apellido_paterno", "name":"paciente_apellido_paterno" },
-            { "data": "paciente_rut_sin_dv", "name":"paciente_rut_sin_dv" },
-            { "data": "paciente_fecha", "name":"paciente_fecha" },
-            { "data": "paciente_estado_pap", "name":"paciente_estado_pap" },
-            { "data": "action" }
+            { "data": "nombre", "name":"nombre"},
+            { "data": "apellidos", "name":"apellidos" },
+            { "data": "rut", "name":"rut" },
+            {
+                 "data": "ultimo_control", "name":"ultimo_control",
+                 render:function(data, type, row, meta) { return row.ultimo_control.split('-').reverse().join('-'); }
+            },
+            { 
+                "data": "estado_pap", "name":"estado_pap",
+                render:function(data, type, row, meta) {
+                    if(row.estado_pap == 'REALIZADO'){
+                        return '<span class="badge bg-success"><i class="fa-solid fa-check"></i> ' + row.estado_pap + '</span>';
+                    }else{
+                        return '<span class="badge bg-danger"><i class="fa-solid fa-times"></i>'+ row.estado_pap + '</span>';
+                    }
+                }
+            },
+            { 
+                "data": "action", "name":"action",
+                 render: function(data, type, row, meta) { 
+                   return '<button class="btn btn-primary m-1" id="'+row.id_paciente+'"><i class="text-white fa-solid fa-eye"></i></button>' +
+                          '<button class="btn btn-info m-1" id="'+row.id_paciente+'"><i class="text-white fa-solid fa-file-pen"></i></button>' +
+                          '<button class="btn btn-danger m-1" id="'+row.id_paciente+'"><i class="text-white fa-solid fa-hand-holding-heart"></i></button>';
+                 }
+            }
         ],
         "order": [[ 0, "desc" ]],
         language: {
@@ -234,11 +253,10 @@
             let rutSinDv = $('#inputRut').val().split('-')[0].split('.').join('');
             let edad = $('#inputEdad').val();
             let direccion = $('#inputDireccion').val();
-            let fechaPap = $('#inputFechaPap').val().split('-').reverse().join('-');
+            let fechaPap = $('#inputFechaPap').val();
 
             let resultValidation = formValidation(name, lastName, surName, statePap, rutSinDv, edad, direccion, fechaPap);
 
-            console.log(resultValidation);
             if(resultValidation.status != 200){
                 hlorAlert(resultValidation)
             }else{

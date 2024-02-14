@@ -9,9 +9,11 @@ class MatronasPacientesModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'mat_pacientes';
+    protected $table = '_matronas';
     protected $primaryKey = 'paciente_id';
-
+    const UPDATED_AT = null;
+    const CREATED_AT = null;
+    
     protected $fillable = [
         'paciente_nombre',
         'paciente_apellido_paterno',
@@ -19,7 +21,7 @@ class MatronasPacientesModel extends Model
         'paciente_rut_sin_dv',
         'paciente_edad',
         'paciente_direccion',
-        'paciente_rut_dv',
+        'paciente_dv',
         'paciente_estado',
         'paciente_fecha',
         'paciente_estado_pap'
