@@ -67,7 +67,8 @@ class MatronasPacientes extends Controller
                 'paciente_direccion'        => $request->input('direccion'),
                 'paciente_dv'               => $request->input('rutDv'),
                 'paciente_estado_pap'       => $request->input('statePap'),
-                'paciente_fecha'            => $request->input('fechaPap')
+                'paciente_fecha'            => $request->input('fechaPap'),
+                'paciente_estado'           => true
             ]);
           
             $nuevo_paciente->save();
@@ -81,13 +82,30 @@ class MatronasPacientes extends Controller
         
     }
 
-    public function listPacients(){
+    public function listPacientsAlta(): object {
+        Log::info('INICIO FUNCIÓN LISTAR PACIENTES ALTA');
+        $array_pacientAlta = DB::select('SELECT * FROM fn_pacientlist(false)');
+        $array_response = $this->createListPacient($array_pacientAlta);
+        Log::info('TERMINO FUNCIÓN LISTAR PACIENTES ALTA');
+
+        return Datatables::of($array_response)->make(true);
+    }
+    public function listPacients(): object {
         Log::info('OBTENER LISTA DE PACIENTES');
         
-        $array_pacient = DB::select('SELECT * FROM fn_pacientList()');
+        $array_pacient = DB::select('SELECT * FROM fn_pacientList(true)');
         $array_response = $this->createListPacient($array_pacient);
         
         return Datatables::of($array_response)->make(true);
+    }
+
+    public function visualizarPaciente(Request $id_request): object {
+
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Paciente Visualizado Exitosamente'
+        ]);
     }
 
     protected function formatRut(int $int_rut, string $str_dv): string{
@@ -102,7 +120,7 @@ class MatronasPacientes extends Controller
         return $int_reverse_join_dv;
     }
 
-    protected function createListPacient(array $array_pacient){
+    protected function createListPacient(array $array_pacient): array{
         $array_response = [];
         for($i = 0; $i < count($array_pacient); $i++){
             array_push($array_response, 
@@ -118,5 +136,32 @@ class MatronasPacientes extends Controller
         }
 
         return $array_response;
+    }
+    
+    public function selectOnePacient(Request $request_id): object{
+        Log::info("OBTENER PACIENTE POR ID");
+        $int_id = $request_id->input('id');
+        $array_response = MatronasPacientesModel::select('*')->where('paciente_id', '=', $int_id)->get();
+       
+        Log::info("RETORNAR RESPUESTA CON PACIENTE SELECCIONADO");
+
+        return response()->json(
+            [
+                'status'=> 200,
+                'message' => 'Paciente Obtenido Exitosamente',
+                'data'  => $array_response
+            ]
+        );
+    }
+
+    public function darDeAlta(Request $request_id){
+        $int_id = $request_id->input('id');
+        DB::select("SELECT * FROM fn_pacientalta($int_id)");
+
+        return response()->json(
+            [
+              'status'=> 200,
+              'message' => 'Paciente dado de Alta Exitosamente'
+            ]);
     }
 }

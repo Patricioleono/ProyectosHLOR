@@ -9,10 +9,30 @@
      <!-- FONT -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700" rel='stylesheet' type='text/css'>
-    <link  href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css" rel="stylesheet">
 </head>
 
 <body>
+    <style>
+        .cargando {
+            width: 100%;height: 100%;
+            overflow: hidden;
+            top: 0px;
+            left: 0px;
+            z-index: 10000;
+            text-align: center;
+            position:absolute;
+            background-color: #FFFFFF;
+            opacity:0.9;
+            filter:alpha(opacity=50);
+        }
+    </style>
+    <div id="bloquea" class="cargando d-none">
+        <img src="/storage/cargando.gif" alt="cargando" class="mt-5">
+        <div class="color-dark ms-5 mt-3">
+            Cargando... Por Favor Espere...
+        </div>
+    </div>
     <!--MATRONAS APP-->
     @yield('header')
         @yield('content')
@@ -24,6 +44,13 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
     <script>
+        function bloquearPantalla(){
+            $('#bloquea').removeClass('d-none');
+        }
+        function desbloquearPantalla(){
+            $('#bloquea').addClass('d-none');
+        }
+
         var hlorBase = "{{ url('/') }}";
 
 
@@ -50,7 +77,7 @@
                         message = status.message
                     }
                     type = 'success'
-                    text = 'Proceso Realizado Exitosamente'
+                    message = 'Proceso Realizado Exitosamente'
                     break
             }
 

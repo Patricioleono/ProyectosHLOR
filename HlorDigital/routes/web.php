@@ -12,4 +12,8 @@ Route::get('/', function () {
 Route::controller(MatronasPacientes::class)->group( function() {
     Route::post('/newPacient', 'saveNewPacient');
     Route::post('/listPacients', 'listPacients');
+    Route::post('/listPacientsAlta', 'listPacientsAlta');
+    Route::post('/onePacient', 'selectOnePacient');
+    Route::post('/visualizarPaciente', 'visualizarPaciente');
+    Route::post('/darDeAlta', 'darDeAlta');
 });
