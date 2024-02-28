@@ -5,13 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MatronasPacientes extends Model
+class MatronasPacientesModel extends Model
 {
     use HasFactory;
 
-    protected $table = 'mat_pacientes';
-    protected $primaryKey = 'paciente-id';
-
+    protected $table = '_matronas';
+    protected $primaryKey = 'paciente_id';
+    const UPDATED_AT = null;
+    const CREATED_AT = null;
+    
     protected $fillable = [
         'paciente_nombre',
         'paciente_apellido_paterno',
@@ -22,7 +24,7 @@ class MatronasPacientes extends Model
         'paciente_dv',
         'paciente_estado',
         'paciente_fecha',
-        'paciente_pap'
+        'paciente_estado_pap'
     ];
 
 
