@@ -308,6 +308,30 @@
             $('#inputDireccion').removeAttr('disabled');
             $('#inputFechaPap').removeAttr('disabled');
         });
+        $('#closeModal').on('click', function() {
+            $('#inputName').val('');
+            $('#inputLastName').val('');
+            $('#inputSurName').val('');
+            $('#inputSelectPap').val('Seleccione Aqui');
+            $('#inputRut').val('');
+            $('#inputEdad').val('');
+            $('#inputDireccion').val('');
+            $('#inputFechaPap').val('');
+            $('#fechaPap').fadeOut();
+            $('#fechaPap').addClass('d-none');
+        });
+        $('.btn-close').on('click', function() {
+            $('#inputName').val('');
+            $('#inputLastName').val('');
+            $('#inputSurName').val('');
+            $('#inputSelectPap').val('Seleccione Aqui');
+            $('#inputRut').val('');
+            $('#inputEdad').val('');
+            $('#inputDireccion').val('');
+            $('#inputFechaPap').val('');
+            $('#fechaPap').fadeOut();
+            $('#fechaPap').addClass('d-none');
+        });
 
         $('.btn-close').on('click', function() {
             $('#inputName').val('');
