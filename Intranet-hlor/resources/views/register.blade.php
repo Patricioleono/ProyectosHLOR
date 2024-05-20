@@ -75,7 +75,7 @@
                 const result_validation_front = validate_form(email_user, pass_user);
                 if (result_validation_front == 200) {
                     $.ajax({
-                        url: base_hlor + '/api/register_user',
+                        url: base_hlor + '/register_user',
                         type: 'POST',
                         data: {
                             str_email: email_user,

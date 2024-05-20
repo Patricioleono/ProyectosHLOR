@@ -54,19 +54,6 @@
             $("#cargando_pantalla").addClass('hidden');
         }
 
-        function redirect_to(url, type) {
-            $.ajax({
-                url: base_hlor + url,
-                type: type,
-                beforeSend: function() {
-                    bloquear_pantalla();
-                },
-                success: function() {
-                    console.log('Redirected to');
-                    desbloquear_pantalla();
-                }
-            });
-        }
         var regEX = /^[a-zA-Z0-9.!#$%&'*+\=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     var base_hlor = "{{ url('/') }}";
 

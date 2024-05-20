@@ -66,20 +66,15 @@
                                 success: function(data) {
                                     $('#input_user').val('');
                                     $('#input_pass').val('');
-                                    if (data.status != 200) {
-                                        hlor_alert(data.message, 'error');
-                                    } else {
-                                        if (data.status != 200) {
-                                            hlor_alert(data.message, 'error');
-
-                                        } else {
-                                            redirect_to("/dashboard", 'GET');
-                                            desbloquear_pantalla();
-                                        }
+                                    if(data.status === 200){
+                                        window.location.href = base_hlor + data.to;
                                     }
+                                    console.log('redireccionando');
+                                    desbloquear_pantalla();
                                 },
                                 error: function(data) {
                                     hlor_alert(data, 'error');
+                                    desbloquear_pantalla();
                                 }
                             });
                         } else {
