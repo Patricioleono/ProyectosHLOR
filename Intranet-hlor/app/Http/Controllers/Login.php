@@ -12,7 +12,7 @@ use App\Helpers\hlor_scan as helpers;
 class Login extends Controller
 {
 
-    public function index(Request $object_request)
+    public function index(Request $object_request): object
     {
         Log::info("VALIDANDO DATOS: ". json_encode($object_request->all()));
         $credentials = $object_request->only('email', 'password');
@@ -41,9 +41,10 @@ class Login extends Controller
                 'log_ip' => helpers::get_ip_address($user_login[0]->log_nombres." ".$user_login[0]->log_apellido_paterno." ".$user_login[0]->log_apellido_materno)
             ]);
 
+            $data_login  = login_model::where('log_email', $credentials['email'])->get();
             return response()->json([
                 'status' => 200,
-                'message' => 'Bienvenidos al intranet',
+                'data' => $data_login[0]->log_id,
                 'to' => '/dashboard'
             ]);
         }

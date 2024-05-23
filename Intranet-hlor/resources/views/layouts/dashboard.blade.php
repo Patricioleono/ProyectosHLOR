@@ -10,6 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -40,7 +41,7 @@
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content flex flex-col">
+        <div class="drawer-content ">
             <!-- Navbar -->
             <div class="w-full navbar bg-base-200">
                 <div class="flex-none lg:hidden">
@@ -54,20 +55,20 @@
                 </div>
                 <div class="flex-1 px-2 mx-2"></div>
                 <div class="flex-none hidden lg:block">
+                    {{ ucfirst($user_data[0]->log_nombres)." ".ucfirst($user_data[0]->log_apellido_paterno)." ".ucfirst($user_data[0]->log_apellido_materno) }}
                     <ul class="menu menu-horizontal">
                         <!-- Navbar menu content here -->
                         <div class="dropdown dropdown-end">
                             <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-                                <div class="w-10 rounded-full">
-                                    <img alt="Tailwind CSS Navbar component"
-                                        src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
-                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
                             </div>
                             <ul tabindex="0"
                                 class="mt-3 z-[1] p-2 shadow menu menu-sm dropdown-content bg-base-100 rounded-box w-52">
-                                <!--al deslogear envioar a la seccion login-->
+                                <!--al deslogear enviar a la seccion login-->
                                 <li>
-                                    <a id="logout">Logout</a>
+                                    <a id="logout">
+                                        <i class="fa-solid fa-arrow-right-from-bracket"></i> Cerrar Sessión
+                                    </a>
                                 </li>
                             </ul>
                         </div>
@@ -75,9 +76,9 @@
                 </div>
             </div>
 
-            <!-- Page content here -->
             @yield('dashboard')
-
+            @yield('rrhh_view')
+            @yield('matronas_view')
         </div>
         <div class="drawer-side">
             <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
@@ -85,31 +86,32 @@
                 <div class="w-32 mb-1"><img src="{{ asset('assets/img/logo.png') }}" alt=""></div>
                 <!-- MODULOS -->
                 <li>
-                    <details>
-                        <summary>
-                            <span>icon</span> Modulos
-                        </summary>
-                        <ul>
-                            <li>
-                                <a>RRHH</a>
-                            </li>
-                            <li>
-                                <a>Matronas</a>
-                            </li>
-                            <li>
-                                <a>Mantención</a>
-                            </li>
-                            <li>
-                                <a>Vales de gas</a>
-                            </li>
-                        </ul>
-                    </details>
+                    <li>
+                        <a href="{{"/rrhh/".$user_data[0]->log_id}}">
+                            <span><i class="fa-solid fa-users-viewfinder"></i></span> Modulo RRHH
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{"/matronas/".$user_data[0]->log_id}}">
+                            <span><i class="fa-solid fa-person-pregnant"></i></span> Modulo Matronas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{"/mantencion/".$user_data[0]->log_id}}">
+                            <span><i class="fa-solid fa-hammer"></i></span> Modulo Mantención
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{"/gas/".$user_data[0]->log_id}}">
+                            <span><i class="fa-solid fa-gas-pump"></i></span> Modulo Vales de Gas
+                        </a>
+                    </li>
                 </li>
                 <!-- MANTENEDORES -->
                 <li>
                     <details>
                         <summary>
-                            <span>icon</span> Mantenedores
+                            <span><i class="fa-solid fa-box-archive"></i></span> Mantenedores
                         </summary>
                         <ul>
                             <li>
@@ -127,12 +129,10 @@
                         </ul>
                     </details>
                 </li>
-
-
             </ul>
         </div>
     </div>
-
+    @yield('modals_matronas')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -186,6 +186,7 @@
         }
     </script>
     @yield('script_dashboard')
+    @yield('script_matronas')
 </body>
 
 </html>

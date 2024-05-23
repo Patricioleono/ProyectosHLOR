@@ -67,7 +67,7 @@
                                     $('#input_user').val('');
                                     $('#input_pass').val('');
                                     if(data.status === 200){
-                                        window.location.href = base_hlor + data.to;
+                                        window.location.href = base_hlor + data.to+"/" + data.data;
                                     }
                                     console.log('redireccionando');
                                     desbloquear_pantalla();
