@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -79,10 +80,14 @@
             @yield('dashboard')
             @yield('rrhh_view')
             @yield('matronas_view')
+            @yield('nacionalidad_view')
+            @yield('modal_nacionalidad')
+            @yield('motivo_pap_view')
+            @yield('prevision_view')
         </div>
         <div class="drawer-side">
             <label for="my-drawer-3" aria-label="close sidebar" class="drawer-overlay"></label>
-            <ul class="p-3 menu w-48 min-h-full bg-base-200">
+            <ul class="p-3 menu w-64 min-h-full bg-base-200">
                 <div class="w-32 mb-1"><img src="{{ asset('assets/img/logo.png') }}" alt=""></div>
                 <!-- MODULOS -->
                 <li>
@@ -111,20 +116,24 @@
                 <li>
                     <details>
                         <summary>
-                            <span><i class="fa-solid fa-box-archive"></i></span> Mantenedores
+                            <span><i class="fa-solid fa-box-archive"></i></span> Mantenedores Gererales
                         </summary>
                         <ul>
                             <li>
-                                <a>RRHH</a>
+                                <a href="{{"/mantenedor_nac/".$user_data[0]->log_id}}">
+                                    <span><i class="fa-solid fa-box-archive"></i></span> Mantenedor Previsión
+                                </a>
                             </li>
                             <li>
-                                <a>Matronas</a>
+                                <a href="">
+                                    <span><i class="fa-solid fa-box-archive"></i></span> Mantenedor Nacionalidad
+                                </a>
                             </li>
                             <li>
-                                <a>Mantención</a>
-                            </li>
-                            <li>
-                                <a>Vales de gas</a>
+                            <!--el mantenedor pap esta habilitado solo si el rol es matrona-->
+                               <a href="">
+                                   <span><i class="fa-solid fa-box-archive"></i></span> Mantenedor Motivo PAP
+                               </a>
                             </li>
                         </ul>
                     </details>
@@ -133,10 +142,10 @@
         </div>
     </div>
     @yield('modals_matronas')
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
     <script>
         function bloquear_pantalla() {
             $("#cargando_pantalla").removeClass('hidden');
@@ -146,29 +155,31 @@
             $("#cargando_pantalla").addClass('hidden');
         }
 
-        var regEX = /^[a-zA-Z0-9.!#$%&'*+\=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
     var base_hlor = "{{ url('/') }}";
 
-    function verify_email(email) {
-        let validate_email = regEX.exec(email);
-        let result = validate_email ? true : false;
+    function format_rut(rut) {
+        const rutLimpio = rut.replace(/[^0-9kK]/g, '');
 
-        return result;
+        const cuerpo = rutLimpio.slice(0, -1);
+        const dv = rutLimpio.slice(-1).toUpperCase();
+
+        if (rutLimpio.length < 2) return rutLimpio;
+
+        let cuerpoFormatoMiles = cuerpo.toString().split('').reverse().join('').replace(/(?=\d*\.?)(\d{3})/g, '$1.');
+        cuerpoFormatoMiles = cuerpoFormatoMiles.split('').reverse().join('').replace(/^[\.]/, '');
+
+        return `${cuerpoFormatoMiles}-${dv}`;
     }
 
-    function verify_password(pass) {
-        let count = pass.length;
-        let result = count >= 4 ? true : false;
+    function format_rut_init() {
+        document.addEventListener('input', (event) => {
+            const complete_rut = document.getElementById('input_rut');
 
-        return result;
-    }
-
-    function validate_form(email, pass) {
-        let result_email = verify_email(email);
-        let result_pass = verify_password(pass);
-        let result = result_email == true && result_pass == true ? 200 : 400;
-
-        return result;
+            if (event.target === complete_rut) {
+                let rut_formatted = format_rut(complete_rut.value);
+                complete_rut.value = rut_formatted;
+            }
+        });
     }
 
     $.ajaxSetup({
@@ -187,6 +198,7 @@
     </script>
     @yield('script_dashboard')
     @yield('script_matronas')
+    @yield('script_nacionalidad')
 </body>
 
 </html>
