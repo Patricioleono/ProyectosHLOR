@@ -12,29 +12,15 @@
     <div class="grid grid-cols-auto">
         <div class="overflow-x-auto">
             <div class="overflow-x-auto">
-                <table class="table table-zebra">
+                <table class="table table-zebra" id="table_nacionalidad">
                     <thead>
                     <tr>
-                        <th>#</th>
                         <th>Nacionalidad</th>
                         <th>Sigla</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
                     <tbody>
-
-                    @php
-                        foreach($nacionalidad as $nacional){
-                            echo '<tr>';
-                            echo '<th>'.$nacional->mat_nacionalidad_pk.'</th>';
-                            echo '<td>'.$nacional->mat_pais_origen.'</td>';
-                            echo '<td>'.$nacional->mat_sigla_nacionalidad.'</td>';
-                            echo '<td>';
-                            echo '<button class="btn btn-outline btn-error" onclick="eliminar.showModal()" id="'.$nacional->mat_nacionalidad_pk.'">Eliminar</button>';
-                            echo '</td>';
-                            echo '</tr>';
-                        }
-                    @endphp
 
                     </tbody>
                 </table>
@@ -72,12 +58,60 @@
 
 @section('script_nacionalidad')
     <script>
+        var table_nacionalidad = $('#table_nacionalidad').DataTable({
+            "processing": false,
+            "serverSide": true,
+            "lengthChange": false,
+            "paging": false,
+            "scrollCollapse": true,
+            "scrollY": '50vh',
+            "searching": false,
+            "ajax": {
+                url: base_hlor + '/list_nacionalidad',
+                type: 'POST'
+            },
+            "columns": [
+                {"data":"nombre_nac", "name":"nombre_nac"},
+                {"data":"sigla_nac", "name":"sigla_nac"},
+                {"data":"action", "name":"action",
+                render: function(data, type, row, meta){
+                    return '<button class="btn btn-outline btn-error btn_eliminar_nac" id="'+row.id_nac+'"><i class="fa-solid fa-xmark"></i> Eliminar</button>'
+                }}
+            ],
+            "order": [[ 0, "asc" ]],
+            language: {
+                "decimal": "",
+                "emptyTable": "No hay datos",
+                "info": "Mostrando _START_ a _END_ de _TOTAL_ registros",
+                "infoEmpty": "Mostrando 0 a 0 de 0 registros",
+                "infoFiltered": "(Filtro de _MAX_ total registros)",
+                "infoPostFix": "",
+                "thousands": ",",
+                "lengthMenu": "Mostrar _MENU_ registros",
+                "loadingRecords": "Cargando...",
+                "processing": "Procesando...",
+                "search": "Buscar:",
+                "zeroRecords": "No se encontraron Registros",
+                "paginate": {
+                    "first": "Primero",
+                    "last": "Ultimo",
+                    "next": "Próximo",
+                    "previous": "Anterior"
+                },
+                "aria": {
+                    "sortAscending": ": Activar orden de columna ascendente",
+                    "sortDescending": ": Activar orden de columna desendente"
+                }
+            }
+        });
+
         $(document).ready(function() {
+
             $('#btn_nueva_nacionalidad').on('click', function(event){
                 event.preventDefault();
 
                 let nacionalidad = $('#input_nacionalidad').val();
-                let sigla = $('#input_sigla').val();
+                let sigla        = $('#input_sigla').val();
 
                 $.ajax({
                     url: base_hlor + '/mantenedor_nac/ingreso_nueva_nac',
@@ -87,14 +121,55 @@
                         nacionalidad: nacionalidad,
                         sigla: sigla
                     },
+                    beforeSend:function(){ bloquear_pantalla(); },
                     success: function(data) {
-                        hlor_alert(data, 'success');
+                        let nacionalidad = $('#input_nacionalidad').val('');
+                        let sigla        = $('#input_sigla').val('');
+                        table_nacionalidad.clear().draw();
+                        document.getElementById('ingreso_nueva_nacionalidad').close();
+                        desbloquear_pantalla();
+                        hlor_alert(data.message, 'success');
                     },
                     error: function(error) {
+                        desbloquear_pantalla();
                         hlor_alert(error, 'error');
                     }
                 });
             });
+
+            $('#table_nacionalidad tbody').on('click', '.btn_eliminar_nac', function(){
+                let data = $(this);
+                let id = data.attr('id');
+
+                Swal.fire({
+                    title: "¿Desea Borrar la Nacionalidad?",
+                    showCancelButton: true,
+                    confirmButtonText: "Si",
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: base_hlor + '/mantenedor_nac/eliminar_nac',
+                            type: 'POST',
+                            dataType: 'JSON',
+                            data: { id: id },
+                            success: function(data) {
+                                table_nacionalidad.clear().draw();
+                                hlor_alert(data.message,'success');
+                            },
+                            error: function(error) {
+                                hlor_alert(error, 'error');
+                            }
+                        });
+                    }
+                });
+            });
+
+            $('#btn_cerrar_nuevo_usuario').on('click', function(event){
+                let nacionalidad = $('#input_nacionalidad').val('');
+                let sigla        = $('#input_sigla').val('');
+            });
         });
+
     </script>
 @endsection

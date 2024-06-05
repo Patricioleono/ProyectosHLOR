@@ -26,11 +26,26 @@ Route::controller(dashboard_controller::class)->group(function(){
     Route::controller(matronas_controller::class)->group(function(){
         Route::get('/matronas/{id}', 'index');
         Route::post('/matronas/new_user', 'new_user');
+        Route::post('/matronas/list_users', 'list_table_user');
+        Route::post('/matronas/historial_usuario', 'user_historial');
+        Route::post('/matronas/historial_usuario_eliminar', 'user_delete');
     });
 
     Route::controller(mantenedor_controller::class)->group(function(){
         Route::get('/mantenedor_nac/{id}', 'view_nacionalidad');
         Route::post('/mantenedor_nac/ingreso_nueva_nac', 'ingreso_nacionalidad');
+        Route::post('/mantenedor_nac/eliminar_nac', 'eliminar_nacionalidad');
+        Route::post('/list_nacionalidad', 'listar_nacionalidad');
+
+        Route::get('/mantenedor_prev/{id}', 'view_prevision');
+        Route::post('/mantenedor_prev/ingreso_nueva_prev', 'ingreso_prevision');
+        Route::post('/mantenedor_prev/eliminar_prev', 'eliminar_prevision');
+        Route::post('/list_prevision', 'listar_prevision');
+
+        Route::get('/mantenedor_motivo/{id}', 'view_motivo');
+        Route::post('/mantenedor_motivo/ingreso_nuevo_motivo', 'ingreso_motivo_pap');
+        Route::post('/mantenedor_motivo/eliminar_motivo', 'eliminar_motivo');
+        Route::post('/list_motivo', 'listar_motivo_pap');
     });
 
 });

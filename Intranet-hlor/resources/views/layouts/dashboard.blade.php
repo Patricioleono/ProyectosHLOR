@@ -120,18 +120,18 @@
                         </summary>
                         <ul>
                             <li>
-                                <a href="{{"/mantenedor_nac/".$user_data[0]->log_id}}">
+                                <a href="{{"/mantenedor_prev/".$user_data[0]->log_id}}">
                                     <span><i class="fa-solid fa-box-archive"></i></span> Mantenedor Previsión
                                 </a>
                             </li>
                             <li>
-                                <a href="">
+                                <a href="{{"/mantenedor_nac/".$user_data[0]->log_id}}">
                                     <span><i class="fa-solid fa-box-archive"></i></span> Mantenedor Nacionalidad
                                 </a>
                             </li>
                             <li>
                             <!--el mantenedor pap esta habilitado solo si el rol es matrona-->
-                               <a href="">
+                               <a href="{{"/mantenedor_motivo/".$user_data[0]->log_id}}">
                                    <span><i class="fa-solid fa-box-archive"></i></span> Mantenedor Motivo PAP
                                </a>
                             </li>
@@ -142,6 +142,8 @@
         </div>
     </div>
     @yield('modals_matronas')
+    @yield('modal_prevision')
+    @yield('modal_motivo_pap')
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -199,6 +201,8 @@
     @yield('script_dashboard')
     @yield('script_matronas')
     @yield('script_nacionalidad')
+    @yield('script_prevision')
+    @yield('script_motivo_pap')
 </body>
 
 </html>
