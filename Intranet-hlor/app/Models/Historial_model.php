@@ -12,13 +12,15 @@ class Historial_model extends Model
     public $timestamps = false;
     protected $table = '_matronas_historial';
     protected $primaryKey = 'mat_historial_pk';
-     const UPDATED_AT = 'null';
+    const UPDATED_AT = 'null';
     const CREATED_AT = 'null';
     protected $fillable = [
         'mat_historial_fecha_pap',
-        'mat_historial_indicaciones',
+        'mat_historial_vigencia_pap',
+        'mat_historial_observaciones',
         'mat_historial_resultado_pap',
         'mat_historial_motivo_pap',
+        'mat_historial_rut_matrona',
         'user_rut_sin_dv',
         'user_rut_dv'
     ];

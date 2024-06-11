@@ -2,8 +2,8 @@
 
 @section('matronas_view')
     <div class="m-5 grid grid-rows-auto gap-4">
-        <div class="grid">
-            <div class="col-end-12 ms-96">
+        <div class="grid justify-end">
+            <div class="col-end-12">
                 <button class="btn btn-outline btn-success ms-96" onclick="ingreso_nuevo_paciente.showModal()">Ingresar nuevo Paciente</button>
             </div>
         </div>
@@ -15,6 +15,10 @@
                             <tr>
                                 <th>Nombre Completo</th>
                                 <th>Rut</th>
+                                <th>Fecha Ultimo Pap</th>
+                                <th>Vigencia Pap</th>
+                                <th>Resultado Pap</th>
+                                <th>Atendido Por</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
@@ -92,15 +96,15 @@
                     <div class="collapse collapse-plus bg-white border border-1">
                         <input type="checkbox" name="my-accordion-3"/>
                         <div class="collapse-title text-xl font-medium">
-                            Datos Primer Control/Ingreso
+                            Datos Primer Toma Pap
                         </div>
                         <div class="collapse-content">
                             <div class="grid grid-cols-2 gap-1">
                                 <label class="form-control">
                                     <div class="label">
-                                        <span class="label-text-alt">Indicaciones</span>
+                                        <span class="label-text-alt">Observaciones</span>
                                     </div>
-                                    <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Indicaciones" id="input_indicaciones"></textarea>
+                                    <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Observacion" id="input_observacion"></textarea>
                                 </label>
                                 <label class="form-control">
                                     <div class="label">
@@ -175,7 +179,7 @@
                        <tr>
                            <th>Fecha Pap</th>
                            <th>Resultado Pap</th>
-                           <th>Indicaciones</th>
+                           <th>Observaciones</th>
                        </tr>
                        </thead>
                        <tbody>
@@ -190,15 +194,15 @@
             <div class="collapse collapse-plus bg-white border border-1 mt-5" id="accordion_historial">
                 <input type="checkbox" name="my-accordion-3"/>
                 <div class="collapse-title text-xl font-medium">
-                    Ingresar Nuevo Control
+                    Ingresar Nueva Toma Pap
                 </div>
                 <div class="collapse-content">
                     <div class="grid grid-cols-2 gap-1">
                         <label class="form-control">
                             <div class="label">
-                                <span class="label-text-alt">Indicaciones</span>
+                                <span class="label-text-alt">Observaciones</span>
                             </div>
-                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Indicaciones" id="control_indicaciones"></textarea>
+                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Observacion" id="control_observacion"></textarea>
                         </label>
                         <label class="form-control">
                             <div class="label">
@@ -231,7 +235,7 @@
                         </label>
                     </div>
                     <div class="grid grid-cols-1 gap-1 mt-3 w-full place-items-start">
-                        <button class="btn btn-outline btn-success" id="btn_nuevo_control"><i class="fa-regular fa-square-plus"></i> Ingresar Nuevo Control</button>
+                        <button class="btn btn-outline btn-success" id="btn_nuevo_pap"><i class="fa-regular fa-square-plus"></i> Ingresar Nuevo Pap</button>
                     </div>
                 </div>
             </div>
@@ -266,9 +270,9 @@
 
                     <label class="form-control">
                         <div class="label">
-                            <span class="label-text">Indicaciones</span>
+                            <span class="label-text">Observaciones</span>
                         </div>
-                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Indicaciones" id="edit_historial_indicaciones"></textarea>
+                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Observacion" id="edit_historial_observaciones"></textarea>
                     </label>
                 </div>
             </div>
@@ -294,19 +298,27 @@
         "scrollY": '50vh',
         "ajax": {
             url: base_hlor + '/matronas/list_users',
-            type: 'POST'
+            type: 'POST',
         },
         "columns": [
-            {"data":"user_name", "name":"user_name",
-                render: function(data, type, row,){
-                    return row.user_name+' '+row.user_last_name+' '+row.user_last_last_name;
+            {"data":"nombre_completo", "name":"nombre_completo"},
+            {"data":"rut", "name":"rut"},
+            {"data":"fecha_pap", "name":"fecha_pap",
+                render: function(data, type, row, meta){
+                    return row.fecha_pap.split('-').reverse().join('-');
+                },
+            },
+            {"data":"vigencia_pap", "name":"vigencia_pap",
+                render: function(data, type, row, meta){
+                    return row.vigencia_pap.split('-').reverse().join('-');
                 }
             },
-            {"data":"user_rut", "name":"user_rut"},
+            { "data":"resultado_pap", "name":"resultado_pap"},
+            { "data":"rut_matrona", "name":"rut_matrona"},
             {"data":"action", "name":"action",
                 render: function(data, type, row, meta){
-                    return '<button class="btn btn-outline btn-info info_historial" id="'+row.user_rut+'">Ver Historial</button>' +
-                            '<button class="btn btn-outline btn-error ms-3 alta_user" id="'+row.user_rut+'">Dar de Alta</button>'
+                    return '<button class="btn btn-outline btn-info info_historial" id="'+row.rut+'">Ver Historial</button>' +
+                            '<button class="btn btn-outline btn-error ms-3 alta_user" id="'+row.rut+'">Dar de Alta</button>'
                 }, "orderable": false, "searchable": false
             }
         ],
@@ -354,10 +366,13 @@ $(document).ready(function(){
         let fecha_nacimiento    = $('#input_fecha_nacimiento').val();
         let motivo_pap          = $('#input_motivo_pap').val();
         let fecha_pap           = $('#input_fecha_pap').val();
-        let indicaciones        = $('#input_indicaciones').val()
+        let observaciones       = $('#input_observacion').val()
         let resultado_pap       = $('#input_resultado_pap').val()
 
-        if(indicaciones.length < 0 || resultado_pap.length < 0 ){
+        let anios_vigencia = new Date(fecha_pap);
+        let vigencia_pap = (anios_vigencia.getFullYear() + 3)+'-'+( (anios_vigencia.getMonth() + 1) < 10 ? '0'+(anios_vigencia.getMonth() +1): (anios_vigencia.getMonth() + 1) )+'-'+( (anios_vigencia.getDate() < 10) ? '0'+anios_vigencia.getDate(): anios_vigencia.getDate() );
+
+        if(observaciones.length < 0 || resultado_pap.length < 0 ){
             $.ajax({
                 url: base_hlor + "/matronas/new_user",
                 type: "POST",
@@ -418,8 +433,10 @@ $(document).ready(function(){
                     fecha_nacimiento: fecha_nacimiento,
                     motivo_pap: motivo_pap,
                     fecha_pap: fecha_pap,
-                    indicaciones: indicaciones,
-                    resultado_pap: resultado_pap
+                    observaciones: observaciones,
+                    resultado_pap: resultado_pap,
+                    vigencia_pap: vigencia_pap,
+                    rut_matrona:rut_matrona_login
                 },
                 beforeSend: function() {
                     bloquear_pantalla();
@@ -436,7 +453,7 @@ $(document).ready(function(){
                     $('#input_fecha_nacimiento').val('');
                     $('#input_motivo_pap').val('');
                     $('#input_fecha_pap').val('');
-                    $('#input_indicaciones').val('')
+                    $('#input_observacion').val('')
                     $('#input_resultado_pap').val('')
 
                     table_matronas_user.clear().draw();
@@ -504,7 +521,7 @@ $(document).ready(function(){
                         "columns": [
                             {"data":"fecha_pap", "name":"fecha_pap"},
                             {"data":"resultado_pap", "name":"resultado_pap"},
-                            {"data":"indicaciones", "name":"indicaciones"}
+                            {"data":"observaciones", "name":"observaciones"}
                         ],
                         "order": [[ 0, "asc" ]],
                         language: {
@@ -565,25 +582,31 @@ $(document).ready(function(){
             }
         });
     });
-    $('#btn_nuevo_control').on('click', function(){
-        let control_fecha_pap = $('#control_fecha_pap').val();
-        let control_resultado_pap = $('#control_resultado_pap').val();
-        let control_indicaciones = $('#control_indicaciones').val();
-        let control_motivo_pap = $('#control_motivo_pap').val();
-        let user_rut = document.getElementById('rut_vista_historial').innerHTML;
+    $('#btn_nuevo_pap').on('click', function(){
+        let nuevo_fecha_pap         = $('#control_fecha_pap').val();
+        let nuevo_resultado_pap     = $('#control_resultado_pap').val();
+        let nuevo_observaciones     = $('#control_observacion').val();
+        let nuevo_motivo_pap        = $('#control_motivo_pap').val();
+        let user_rut                = document.getElementById('rut_vista_historial').innerHTML;
 
-        if(control_resultado_pap.length > 0 || control_indicaciones.length > 0) {
+        let anios_vigencia = new Date(nuevo_fecha_pap);
+        let vigencia_pap = (anios_vigencia.getFullYear() + 3)+'-'+( (anios_vigencia.getMonth() + 1) < 10 ? '0'+(anios_vigencia.getMonth() +1): (anios_vigencia.getMonth() + 1) )+'-'+( (anios_vigencia.getDate() < 10) ? '0'+anios_vigencia.getDate(): anios_vigencia.getDate() );
+
+
+        if(nuevo_resultado_pap.length > 0 || nuevo_observaciones.length > 0) {
             $.ajax({
                 url: base_hlor + '/matronas/control_nuevo',
                 type: 'POST',
                 dataType: 'JSON',
                 data: {
-                    control_fecha_pap: control_fecha_pap,
-                    control_resultado_pap: control_resultado_pap,
-                    control_indicaciones: control_indicaciones,
-                    control_motivo_pap: control_motivo_pap,
-                    user_rut: user_rut.split(' ')[1].split('-')[0],
-                    user_rut_dv: user_rut.split(' ')[1].split('-')[1]
+                    nuevo_fecha_pap:        nuevo_fecha_pap,
+                    nuevo_vigencia_pap:     vigencia_pap,
+                    nuevo_resultado_pap:    nuevo_resultado_pap,
+                    nuevo_observaciones:    nuevo_observaciones,
+                    nuevo_motivo_pap:       nuevo_motivo_pap,
+                    user_rut:               user_rut.split(' ')[1].split('-')[0],
+                    user_rut_dv:            user_rut.split(' ')[1].split('-')[1],
+                    rut_matrona:            rut_matrona_login
                 },
                 success: function (data) {
                     if(data !== 400){
@@ -593,7 +616,7 @@ $(document).ready(function(){
 
                      $('#control_fecha_pap').val('');
                      $('#control_resultado_pap').val('');
-                     $('#control_indicaciones').val('');
+                     $('#control_observacion').val('');
                      $('#control_motivo_pap').val('');
                     }else{
                         hlor_alert(data, 'error');
@@ -627,7 +650,7 @@ $(document).ready(function(){
                 if(data.status === 200){
                     $('#edit_historial_fecha_pap').val(data.data[0].mat_historial_fecha_pap);
                     $('#edit_historial_resultado_pap').val(data.data[0].mat_historial_resultado_pap);
-                    $('#edit_historial_indicaciones').val(data.data[0].mat_historial_indicaciones);
+                    $('#edit_historial_observaciones').val(data.data[0].mat_historial_observaciones);
                 }
                 console.log(data)
                 desbloquear_pantalla();

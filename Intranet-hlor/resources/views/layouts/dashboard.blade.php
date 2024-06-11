@@ -148,7 +148,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
-    <script>
+    <script defer>
         function bloquear_pantalla() {
             $("#cargando_pantalla").removeClass('hidden');
         }
@@ -157,7 +157,8 @@
             $("#cargando_pantalla").addClass('hidden');
         }
 
-    var base_hlor = "{{ url('/') }}";
+    const base_hlor = "{{ url('/') }}";
+    const rut_matrona_login   = <?= $user_data[0]->log_rut; ?> + '-' +<?= $user_data[0]->log_rut_dv; ?>;
 
     function format_rut(rut) {
         const rutLimpio = rut.replace(/[^0-9kK]/g, '');
