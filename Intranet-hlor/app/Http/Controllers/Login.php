@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Login_model as login_model;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
@@ -28,24 +29,31 @@ class Login extends Controller
             Log::info("ERROR EN VALIDACION");
             return response()->json([
                 'status' => 400,
-               'message' => $validate_form->errors()
+               'message' => json_encode($validate_form->errors())
             ]);
         }
 
         $user_login = login_model::where('log_email', $credentials['email'])->get();
 
-        if($credentials['email'] === $user_login[0]->log_email && Hash::check($credentials['password'], $user_login[0]->log_password))
-        {
-            login_model::where('log_email', $credentials['email'])->update([
-                'log_time' => date('Y-m-d'),
-                'log_ip' => helpers::get_ip_address($user_login[0]->log_nombres." ".$user_login[0]->log_apellido_paterno." ".$user_login[0]->log_apellido_materno)
-            ]);
+        try{
+            if($credentials['email'] === $user_login[0]->log_email && Hash::check($credentials['password'], $user_login[0]->log_password))
+            {
+                login_model::where('log_email', $credentials['email'])->update([
+                    'log_time' => date('Y-m-d'),
+                    'log_ip' => helpers::get_ip_address($user_login[0]->log_nombres." ".$user_login[0]->log_apellido_paterno." ".$user_login[0]->log_apellido_materno)
+                ]);
 
-            $data_login  = login_model::where('log_email', $credentials['email'])->get();
+                $data_login  = login_model::where('log_email', $credentials['email'])->get();
+                return response()->json([
+                    'status' => 200,
+                    'data' => $data_login[0]->log_id,
+                    'to' => '/dashboard'
+                ]);
+            }
+        }catch(Exception $e){
             return response()->json([
-                'status' => 200,
-                'data' => $data_login[0]->log_id,
-                'to' => '/dashboard'
+                'status' => 400,
+                'message' => json_encode($e->getMessage())
             ]);
         }
 

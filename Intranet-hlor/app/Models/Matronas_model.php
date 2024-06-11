@@ -21,6 +21,8 @@ class Matronas_model extends Model
         'user_rut_dv',
         'user_direccion',
         'user_telefono',
-        'user_fecha_nacimiento'
+        'user_fecha_nacimiento',
+        'user_nacionalidad',
+        'user_prevision'
     ];
 }

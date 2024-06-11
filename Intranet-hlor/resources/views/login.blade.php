@@ -67,9 +67,12 @@
                                     $('#input_user').val('');
                                     $('#input_pass').val('');
                                     if(data.status === 200){
+                                        console.log('redireccionando');
                                         window.location.href = base_hlor + data.to+"/" + data.data;
+                                    }else{
+                                        hlor_alert('Error al Ingresar Credenciales', 'error');
+                                        desbloquear_pantalla();
                                     }
-                                    console.log('redireccionando');
                                     desbloquear_pantalla();
                                 },
                                 error: function(data) {

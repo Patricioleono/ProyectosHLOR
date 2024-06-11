@@ -26,8 +26,11 @@ Route::controller(dashboard_controller::class)->group(function(){
     Route::controller(matronas_controller::class)->group(function(){
         Route::get('/matronas/{id}', 'index');
         Route::post('/matronas/new_user', 'new_user');
+        Route::post('/matronas/control_nuevo', 'new_control');
         Route::post('/matronas/list_users', 'list_table_user');
+        Route::post('/matronas/list_historial', 'list_table_historial');
         Route::post('/matronas/historial_usuario', 'user_historial');
+        Route::post('/matronas/editar_historial', 'edit_historial');
         Route::post('/matronas/historial_usuario_eliminar', 'user_delete');
     });
 

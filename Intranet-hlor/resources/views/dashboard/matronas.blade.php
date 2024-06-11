@@ -89,7 +89,6 @@
                 </div>
 
                 <div class="grid grid-rows-1 mt-3">
-
                     <div class="collapse collapse-plus bg-white border border-1">
                         <input type="checkbox" name="my-accordion-3"/>
                         <div class="collapse-title text-xl font-medium">
@@ -105,9 +104,9 @@
                                 </label>
                                 <label class="form-control">
                                     <div class="label">
-                                        <span class="label-text-alt">Observaciones</span>
+                                        <span class="label-text-alt">Resultado Pap</span>
                                     </div>
-                                    <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Observaciones" id="input_observaciones"></textarea>
+                                    <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Resultado Pap" id="input_resultado_pap"></textarea>
                                 </label>
                             </div>
 
@@ -169,22 +168,26 @@
                 </div>
             </div>
 
-            <div class="grid grid-rows-1 mt-3 justify-items-center">
-                <div class="grid grid-cols-3 gap-5 w-full mt-5">
-                    <div id="fecha_toma_pap_paciente">
-                        <h3 class="border-b-2 hover:border-b-stone-950">Fecha Pap Realizado </h3>
-                    </div>
-                    <div id="resultado_pap_paciente">
-                        <h3 class="border-b-2 hover:border-b-stone-950">Resultado Pap </h3>
-                    </div>
-                    <div id="indicaciones_pap_paciente">
-                        <h3 class="border-b-2 hover:border-b-stone-950">Indicaciones Pap </h3>
-                    </div>
-                </div>
+            <div class="grid grid-rows-1 mt-3 w-full">
+               <div class="grid grid-cols-1">
+                   <table class="table" id="table_historial">
+                       <thead>
+                       <tr>
+                           <th>Fecha Pap</th>
+                           <th>Resultado Pap</th>
+                           <th>Indicaciones</th>
+                       </tr>
+                       </thead>
+                       <tbody>
+
+
+                       </tbody>
+                   </table>
+               </div>
             </div>
 
-            <!-- Desplegar para agregar Control -->
-            <div class="collapse collapse-plus bg-white border border-1 mt-5">
+            <!-- Desplegar para agregar Control Nuevo en apartado historial -->
+            <div class="collapse collapse-plus bg-white border border-1 mt-5" id="accordion_historial">
                 <input type="checkbox" name="my-accordion-3"/>
                 <div class="collapse-title text-xl font-medium">
                     Ingresar Nuevo Control
@@ -195,13 +198,13 @@
                             <div class="label">
                                 <span class="label-text-alt">Indicaciones</span>
                             </div>
-                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Indicaciones" id="input_indicaciones"></textarea>
+                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Indicaciones" id="control_indicaciones"></textarea>
                         </label>
                         <label class="form-control">
                             <div class="label">
-                                <span class="label-text-alt">Observaciones</span>
+                                <span class="label-text-alt">Resultado Pap</span>
                             </div>
-                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Observaciones" id="input_observaciones"></textarea>
+                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Resultado Pap" id="control_resultado_pap"></textarea>
                         </label>
                     </div>
 
@@ -210,7 +213,7 @@
                             <div class="label">
                                 <span class="label-text">Motivo PAP</span>
                             </div>
-                            <select class="select select-bordered w-full" id="input_motivo_pap">
+                            <select class="select select-bordered w-full" id="control_motivo_pap">
                                 <option selected>Seleccione Motivo Pap</option>>
                                 @php
                                     foreach($motivos_pap as $motivos){
@@ -224,15 +227,55 @@
                             <div class="label">
                                 <span class="label-text">Fecha PAP</span>
                             </div>
-                            <input type="date" class="input input-bordered w-full" id="input_fecha_pap"/>
+                            <input type="date" class="input input-bordered w-full" id="control_fecha_pap"/>
                         </label>
+                    </div>
+                    <div class="grid grid-cols-1 gap-1 mt-3 w-full place-items-start">
+                        <button class="btn btn-outline btn-success" id="btn_nuevo_control"><i class="fa-regular fa-square-plus"></i> Ingresar Nuevo Control</button>
                     </div>
                 </div>
             </div>
 
             <div class="modal-action">
                 <form method="dialog">
-                    <button class="btn btn-error btn-outline"><i class="fa-solid fa-xmark"></i> Cerrar Historial</button>
+                    <button class="btn btn-error btn-outline" id="btn_cerrar_historial"><i class="fa-solid fa-xmark"></i> Cerrar Historial</button>
+                </form>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="ver_historial_id" class="modal">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">Editar Datos Control</h3>
+            <div class="gridg grid-rows-1">
+                <div class="grid grid-cols-1 w-full gap-5">
+
+                    <label class="form-control w-full">
+                        <div class="label">
+                            <span class="label-text">Fecha PAP</span>
+                        </div>
+                        <input type="date" class="input input-bordered w-full" id="edit_historial_fecha_pap"/>
+                    </label>
+
+                    <label class="form-control">
+                        <div class="label">
+                            <span class="label-text">Resultado Pap</span>
+                        </div>
+                        <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Resultado Pap" id="edit_historial_resultado_pap"></textarea>
+                    </label>
+
+                    <label class="form-control">
+                        <div class="label">
+                            <span class="label-text">Indicaciones</span>
+                        </div>
+                            <textarea class="textarea textarea-bordered h-24" placeholder="Ingrese Indicaciones" id="edit_historial_indicaciones"></textarea>
+                    </label>
+                </div>
+            </div>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-outline btn-success" id="btn_guardar_edit">Guardar Cambios</button>
+                    <button class="btn btn-outline btn-error">Close</button>
                 </form>
             </div>
         </div>
@@ -241,6 +284,7 @@
 
 @section('script_matronas')
 <script type="text/javascript">
+    var table_historial = $('#table_historial').DataTable();
     var table_matronas_user = $('#table_matronas_user').DataTable({
         "processing": false,
         "serverSide": true,
@@ -311,9 +355,9 @@ $(document).ready(function(){
         let motivo_pap          = $('#input_motivo_pap').val();
         let fecha_pap           = $('#input_fecha_pap').val();
         let indicaciones        = $('#input_indicaciones').val()
-        let observaciones       = $('#input_observaciones').val()
+        let resultado_pap       = $('#input_resultado_pap').val()
 
-        if(indicaciones.length < 0 || observaciones.length < 0 ){
+        if(indicaciones.length < 0 || resultado_pap.length < 0 ){
             $.ajax({
                 url: base_hlor + "/matronas/new_user",
                 type: "POST",
@@ -375,7 +419,7 @@ $(document).ready(function(){
                     motivo_pap: motivo_pap,
                     fecha_pap: fecha_pap,
                     indicaciones: indicaciones,
-                    observaciones: observaciones
+                    resultado_pap: resultado_pap
                 },
                 beforeSend: function() {
                     bloquear_pantalla();
@@ -392,6 +436,8 @@ $(document).ready(function(){
                     $('#input_fecha_nacimiento').val('');
                     $('#input_motivo_pap').val('');
                     $('#input_fecha_pap').val('');
+                    $('#input_indicaciones').val('')
+                    $('#input_resultado_pap').val('')
 
                     table_matronas_user.clear().draw();
                     ingreso_nuevo_paciente.close();
@@ -422,15 +468,12 @@ $(document).ready(function(){
                 $('#nombre_paciente').empty();
                 $('#datos_pacientes').empty();
                 $('#prevision_salud').empty();
-                $('#fecha_toma_pap_paciente').empty();
-                $('#resultado_pap_paciente').empty();
-                $('#indicaciones_pap_paciente').empty();
             },
             success: function(data) {
                 if(data.status !== 400){
                     $('#nombre_paciente').append('<h3 class="transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110">'+data[0].nombre_completo+'</h3>');
                     $('#datos_pacientes').append(
-                        '<h3 class="border-b-2 hover:border-b-stone-950 mt-1">Rut: '+data[0].rut+'</h3>' +
+                        '<h3 class="border-b-2 hover:border-b-stone-950 mt-1" id="rut_vista_historial">Rut: '+data[0].rut+'</h3>' +
                         '<h3 class="border-b-2 hover:border-b-stone-950 mt-1">Fecha de Nacimiento: '+data[0].fecha_de_nacimiento+'</h3>' +
                         '<h3 class="border-b-2 hover:border-b-stone-950 mt-1">Dirección: '+data[0].domicilio +'</h3>'
                     );
@@ -439,11 +482,45 @@ $(document).ready(function(){
                         '<h3 class="border-b-2 hover:border-b-stone-950 mt-1">Nacionalidad: '+data[0].nacionalidad+'</h3>' +
                         '<h3 class="border-b-2 hover:border-b-stone-950 mt-1">Telefono: '+data[0].telefono +'</h3>'
                     );
-                    data.forEach((element) => {
-                        $('#fecha_toma_pap_paciente').append('<h3 class="mt-1">'+element.fecha_pap+'</h3>')
-                        $('#resultado_pap_paciente').append('<h3 class="mt-1">'+element.observaciones+'</h3>')
-                        $('#indicaciones_pap_paciente').append('<h3 class="mt-1">'+element.indicaciones+'</h3>')
+
+                     table_historial.destroy();
+                     table_historial = $('#table_historial').DataTable({
+                         "processing": false,
+                         "serverSide": true,
+                         "lengthChange": false,
+                         "paging": false,
+                         "scrollCollapse": true,
+                         "scrollY": '50vh',
+                         "searching": false,
+                         "info": false,
+                         "ajax": {
+                            url: base_hlor + '/matronas/list_historial',
+                            type: 'POST',
+                            data: {
+                                user_rut: data[0].rut.split('-')[0],
+                                user_dv: data[0].rut.split('-')[1]
+                            }
+                        },
+                        "columns": [
+                            {"data":"fecha_pap", "name":"fecha_pap"},
+                            {"data":"resultado_pap", "name":"resultado_pap"},
+                            {"data":"indicaciones", "name":"indicaciones"}
+                        ],
+                        "order": [[ 0, "asc" ]],
+                        language: {
+                            "decimal": "",
+                            "emptyTable": "Sin datos Cargados",
+                            "infoFiltered": "(Filtro de _MAX_ total registros)",
+                            "loadingRecords": "Cargando...",
+                            "processing": "Procesando...",
+                            "zeroRecords": "No se encontraron Registros",
+                            "aria": {
+                                "sortAscending": ": Activar orden de columna ascendente",
+                                "sortDescending": ": Activar orden de columna desendente"
+                            }
+                        }
                     });
+
                     ver_historial.showModal();
                     desbloquear_pantalla();
                 }else{
@@ -453,7 +530,7 @@ $(document).ready(function(){
 
             },
             error: function(data) {
-                hlor_alert(JSON.parse(data), 'error');
+                hlor_alert(data, 'error');
                 desbloquear_pantalla();
             }
         });
@@ -488,6 +565,82 @@ $(document).ready(function(){
             }
         });
     });
+    $('#btn_nuevo_control').on('click', function(){
+        let control_fecha_pap = $('#control_fecha_pap').val();
+        let control_resultado_pap = $('#control_resultado_pap').val();
+        let control_indicaciones = $('#control_indicaciones').val();
+        let control_motivo_pap = $('#control_motivo_pap').val();
+        let user_rut = document.getElementById('rut_vista_historial').innerHTML;
+
+        if(control_resultado_pap.length > 0 || control_indicaciones.length > 0) {
+            $.ajax({
+                url: base_hlor + '/matronas/control_nuevo',
+                type: 'POST',
+                dataType: 'JSON',
+                data: {
+                    control_fecha_pap: control_fecha_pap,
+                    control_resultado_pap: control_resultado_pap,
+                    control_indicaciones: control_indicaciones,
+                    control_motivo_pap: control_motivo_pap,
+                    user_rut: user_rut.split(' ')[1].split('-')[0],
+                    user_rut_dv: user_rut.split(' ')[1].split('-')[1]
+                },
+                success: function (data) {
+                    if(data !== 400){
+                        ver_historial.close();
+                        table_historial.clear().draw();
+                        hlor_alert(data.message, 'success');
+
+                     $('#control_fecha_pap').val('');
+                     $('#control_resultado_pap').val('');
+                     $('#control_indicaciones').val('');
+                     $('#control_motivo_pap').val('');
+                    }else{
+                        hlor_alert(data, 'error');
+                    }
+
+                },
+                error: function (error) {
+                    hlor_alert(error, 'error');
+                }
+            });
+        }
+
+    });
+
+    $('#table_historial tbody').on('click', '.historial_visualizacion', function(){
+        //bloquear_pantalla();
+        let data = $(this);
+        let id_historial = data[0].id;
+
+        $.ajax({
+            url: base_hlor + '/matronas/editar_historial',
+            type: 'POST',
+            dataType: 'JSON',
+            data: { id_historial: id_historial },
+            beforeSend: function ()
+            {
+                bloquear_pantalla();
+            },
+            success: function (data)
+            {
+                if(data.status === 200){
+                    $('#edit_historial_fecha_pap').val(data.data[0].mat_historial_fecha_pap);
+                    $('#edit_historial_resultado_pap').val(data.data[0].mat_historial_resultado_pap);
+                    $('#edit_historial_indicaciones').val(data.data[0].mat_historial_indicaciones);
+                }
+                console.log(data)
+                desbloquear_pantalla();
+            },
+            error: function ()
+            {
+            }
+        });
+
+        ver_historial_id.showModal();
+
+    });
+
 });
 </script>
 @endsection

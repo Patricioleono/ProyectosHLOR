@@ -17,7 +17,7 @@ class Historial_model extends Model
     protected $fillable = [
         'mat_historial_fecha_pap',
         'mat_historial_indicaciones',
-        'mat_historial_observaciones',
+        'mat_historial_resultado_pap',
         'mat_historial_motivo_pap',
         'user_rut_sin_dv',
         'user_rut_dv'

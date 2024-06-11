@@ -25,7 +25,7 @@
             overflow: hidden;
             top: 0px;
             left: 0px;
-            z-index: 10000;
+            z-index: 99999;
             text-align: center;
             position: absolute;
             background-color: #ffffff !important;

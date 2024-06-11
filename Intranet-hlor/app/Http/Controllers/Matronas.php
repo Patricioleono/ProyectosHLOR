@@ -56,14 +56,16 @@ class Matronas extends Controller
             $new_user->user_direccion = $object_request->post('direccion');
             $new_user->user_telefono = $object_request->post('telefono');
             $new_user->user_fecha_nacimiento = $object_request->post('fecha_nacimiento');
+            $new_user->user_nacionalidad = $object_request->post('nacionalidad');
+            $new_user->user_prevision = $object_request->post('prevision_social');
             $new_user->save();
 
-            if(!is_null($object_request->post('observaciones')) || !is_null($object_request->post('indicaciones')) ){
+            if(!is_null($object_request->post('resultado_pap')) || !is_null($object_request->post('indicaciones')) ){
                 $new_user_historial = new historial_user();
                 $new_user_historial->mat_historial_fecha_pap = $object_request->post('fecha_pap');
                 $new_user_historial->mat_historial_motivo_pap = $object_request->post('motivo_pap');
                 $new_user_historial->mat_historial_indicaciones = $object_request->post('indicaciones');
-                $new_user_historial->mat_historial_observaciones = $object_request->post('observaciones');
+                $new_user_historial->mat_historial_resultado_pap = $object_request->post('resultado_pap');
                 $new_user_historial->user_rut_sin_dv = $object_request->post('rut_sin_dv');
                 $new_user_historial->user_rut_dv = $object_request->post('rut_dv');
                 $new_user_historial->save();
@@ -124,5 +126,82 @@ class Matronas extends Controller
            'status' => 200,
            'message' => 'Usuario dado de alta'
         ]);
+    }
+
+    public function list_table_historial(Request $object_request)
+    {
+        $rut = $object_request->post('user_rut');
+        $dv = $object_request->post('user_dv');
+        $all_historial = DB::select("SELECT * FROM FN_USER_HISTORIAL($rut , $dv) ");
+        $converted_data = $this->list_historial_converted($all_historial);
+        return DataTables::of($converted_data)->make(true);
+    }
+
+    protected function list_historial_converted(array $list): array
+    {
+        $array_response = [];
+        foreach ($list as $historial){
+            array_push($array_response,
+            [
+                'id_historial' => $historial->id_historial,
+                'fecha_pap' => $historial->fecha_pap,
+                'indicaciones' => $historial->indicaciones,
+                'resultado_pap' => $historial->resultado_pap
+            ]);
+        }
+
+        return $array_response;
+    }
+
+    public function new_control(Request $object_request): object
+    {
+        $valitadion_form = Validator::make($object_request->all(), [
+            'control_fecha_pap' =>'required',
+            'control_resultado_pap' =>'required',
+            'control_indicaciones' =>'required',
+            'control_motivo_pap' =>'required'
+        ], $messages = [
+            'control_fecha_pap.required' => "el campo Fecha PAP es obligatorio",
+            'control_resultado_pap.required' => "el campo Resultado PAP es obligatorio",
+            'control_indicaciones.required' => "el campo Indicaciones es obligatorio",
+            'control_motivo_pap.required' => "el campo Motivo PAP es obligatorio"
+        ]);
+
+        if($valitadion_form->fails()){
+            return response()->json([
+               'status' => 400,
+               'message' => $valitadion_form->errors()
+            ]);
+        }else{
+            $new_control = new historial_user();
+            $new_control->mat_historial_fecha_pap = $object_request->post('control_fecha_pap');
+            $new_control->mat_historial_motivo_pap = $object_request->post('control_motivo_pap');
+            $new_control->mat_historial_indicaciones = $object_request->post('control_indicaciones');
+            $new_control->mat_historial_resultado_pap = $object_request->post('control_resultado_pap');
+            $new_control->user_rut_sin_dv = $object_request->post('user_rut');
+            $new_control->user_rut_dv = $object_request->post('user_rut_dv');
+            $new_control->save();
+        }
+        return response()->json([
+           'status' => 200,
+           'message' => 'Control registrado correctamente'
+        ]);
+    }
+
+    public function edit_historial(Request $object_request)
+    {
+        $data_historial = historial_user::select('*')->where('mat_historial_pk', $object_request->post('id_historial'))->get();
+        if($data_historial){
+            return response()->json([
+                'status' => 200,
+                'data' => $data_historial
+            ]);
+        }else{
+            return response()->json([
+               'status' => 400,
+               'message' => 'No se encontro el historial'
+            ]);
+        }
+
     }
 }
