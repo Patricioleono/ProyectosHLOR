@@ -188,20 +188,4 @@ class Matronas extends Controller
         ]);
     }
 
-    public function edit_historial(Request $object_request)
-    {
-        $data_historial = historial_user::select('*')->where('mat_historial_pk', $object_request->post('id_historial'))->get();
-        if($data_historial){
-            return response()->json([
-                'status' => 200,
-                'data' => $data_historial
-            ]);
-        }else{
-            return response()->json([
-               'status' => 400,
-               'message' => 'No se encontro el historial'
-            ]);
-        }
-
-    }
 }

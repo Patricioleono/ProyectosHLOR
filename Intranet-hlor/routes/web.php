@@ -30,7 +30,6 @@ Route::controller(dashboard_controller::class)->group(function(){
         Route::post('/matronas/list_users', 'list_table_user');
         Route::post('/matronas/list_historial', 'list_table_historial');
         Route::post('/matronas/historial_usuario', 'user_historial');
-        Route::post('/matronas/editar_historial', 'edit_historial');
         Route::post('/matronas/historial_usuario_eliminar', 'user_delete');
     });
 
